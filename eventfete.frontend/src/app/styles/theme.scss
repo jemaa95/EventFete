@@ -1,0 +1,49 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$primary-palette: mat.define-palette((
+  50:  #eff6ff,
+  100: #dbeafe,
+  200: #bfdbfe,
+  300: #93c5fd,
+  400: #60a5fa,
+  500: #2563EB,
+  600: #1d4ed8,
+  700: #1e40af,
+  800: #1e3a8a,
+  900: #1e3a8a,
+  contrast: (
+    500: white,
+    600: white,
+    700: white,
+  )
+), 500, 300, 700);
+
+$accent-palette: mat.define-palette((
+  50:  #fff7ed,
+  100: #ffedd5,
+  200: #fed7aa,
+  300: #fdba74,
+  400: #fb923c,
+  500: #F97316,
+  600: #ea580c,
+  700: #c2410c,
+  contrast: (
+    500: white,
+    600: white,
+  )
+), 500, 300, 700);
+
+$theme: mat.define-light-theme((
+  color: (
+    primary: $primary-palette,
+    accent: $accent-palette,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: "'Inter', sans-serif",
+  ),
+  density: 0,
+));
+
+@include mat.all-component-themes($theme);
