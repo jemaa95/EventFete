@@ -2,13 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export type ModePaiement = 'CARTE' | 'VIREMENT' | 'SUR_PLACE';
+export type ModePaiement = 'CARTE' | 'VIREMENT' | 'SUR_PLACE' | 'PAYPAL';
 
 export interface ReservationRequest {
   salleId: number;
   dateDebut: string; // format ISO, ex: '2026-08-15T14:00:00'
   dateFin: string;    // format ISO
   modePaiement: ModePaiement;
+  // Champs optionnels collectés à l'étape "Informations" du tunnel de réservation
+  typeEvenement?: string;
+  nombreInvites?: number;
+  entreprise?: string;
+  informationsComplementaires?: string;
 }
 
 // Le backend renvoie des Map<String, Object> — la forme exacte des clés

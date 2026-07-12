@@ -2,45 +2,48 @@
 
 @include mat.core();
 
-$primary-palette: mat.define-palette((
-  50:  #eff6ff,
-  100: #dbeafe,
-  200: #bfdbfe,
-  300: #93c5fd,
-  400: #60a5fa,
-  500: #2563EB,
-  600: #1d4ed8,
-  700: #1e40af,
-  800: #1e3a8a,
-  900: #1e3a8a,
+$primary-palette: mat.m2-define-palette((
+  50:  #faf5ff,
+  100: #f3e8ff,
+  200: #e9d5ff,
+  300: #d8b4fe,
+  400: #c084fc,
+  500: #9333EA,
+  600: #7e22ce,
+  700: #6b21a8,
+  800: #581c87,
+  900: #4c1d75,
   contrast: (
+    50: rgba(0,0,0,0.87),
+    100: rgba(0,0,0,0.87),
     500: white,
     600: white,
     700: white,
   )
 ), 500, 300, 700);
 
-$accent-palette: mat.define-palette((
-  50:  #fff7ed,
-  100: #ffedd5,
-  200: #fed7aa,
-  300: #fdba74,
-  400: #fb923c,
-  500: #F97316,
-  600: #ea580c,
-  700: #c2410c,
+$accent-palette: mat.m2-define-palette((
+  50:  #fdf2f8,
+  100: #fce7f3,
+  200: #fbcfe8,
+  300: #f9a8d4,
+  400: #f472b6,
+  500: #EC4899,
+  600: #db2777,
+  700: #be185d,
   contrast: (
+    50: rgba(0,0,0,0.87),
     500: white,
     600: white,
   )
 ), 500, 300, 700);
 
-$theme: mat.define-light-theme((
+$theme: mat.m2-define-light-theme((
   color: (
     primary: $primary-palette,
     accent: $accent-palette,
   ),
-  typography: mat.define-typography-config(
+  typography: mat.m2-define-typography-config(
     $font-family: "'Inter', sans-serif",
   ),
   density: 0,

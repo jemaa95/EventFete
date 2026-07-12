@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export type StatutSalle = 'DISPONIBLE' | 'INDISPONIBLE' | 'EN_ATTENTE';
+export type StatutSalle = 'EN_ATTENTE' | 'VALIDEE' | 'REFUSEE' | 'SUSPENDUE';
 
 export interface SalleResponse {
   id: number;
