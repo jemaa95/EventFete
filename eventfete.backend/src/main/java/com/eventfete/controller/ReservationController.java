@@ -68,6 +68,32 @@ public class ReservationController {
         );
     }
 
+    // PUT /api/reservations/{id}/accepter — Propriétaire uniquement
+    @PutMapping("/{id}/accepter")
+    @PreAuthorize("hasAuthority('ROLE_PROPRIO')")
+    public ResponseEntity<Map<String, Object>> accepterReservation(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                reservationService.accepterReservation(id, authentication.getName())
+        );
+    }
+
+    // PUT /api/reservations/{id}/refuser-proprio — Propriétaire uniquement
+    @PutMapping("/{id}/refuser-proprio")
+    @PreAuthorize("hasAuthority('ROLE_PROPRIO')")
+    public ResponseEntity<Map<String, Object>> refuserReservationProprio(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, String> body,
+            Authentication authentication) {
+
+        String motif = body != null ? body.get("motif") : null;
+        return ResponseEntity.ok(
+                reservationService.refuserReservationProprio(id, authentication.getName(), motif)
+        );
+    }
+
     // GET /api/reservations/{id}
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_CLIENT', 'ROLE_PROPRIO', 'ROLE_ADMIN')")

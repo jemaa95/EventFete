@@ -145,6 +145,7 @@ type Filtre = 'toutes' | 'avenir' | 'terminees' | 'annulees';
     .status-badge {
       font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 999px;
     }
+    .status-badge.attente { background: #fed7aa; color: #c2410c; }
     .status-badge.avenir { background: #dbeafe; color: #1d4ed8; }
     .status-badge.terminee { background: #dcfce7; color: #15803d; }
     .status-badge.annulee { background: #fee2e2; color: #dc2626; }
@@ -260,12 +261,17 @@ export class ReservationsHistoriqueComponent {
     });
   }
 
+  isEnAttente(r: ReservationResponse): boolean {
+    return r['statut'] === 'EN_COURS';
+  }
+
   isAnnulee(r: ReservationResponse): boolean {
     return r['statut'] === 'ANNULEE';
   }
 
   isAVenir(r: ReservationResponse): boolean {
-    return r['statut'] === 'CONFIRMEE' && new Date(r['dateDebut'] as string) > new Date();
+    return (r['statut'] === 'CONFIRMEE' || r['statut'] === 'EN_COURS')
+      && new Date(r['dateDebut'] as string) > new Date();
   }
 
   isTerminee(r: ReservationResponse): boolean {
@@ -274,6 +280,7 @@ export class ReservationsHistoriqueComponent {
 
   statutLabel(r: ReservationResponse): string {
     if (this.isAnnulee(r)) return 'Annulée';
+    if (this.isEnAttente(r)) return "En attente d'acceptation";
     if (this.isAVenir(r)) return 'À venir';
     if (this.isTerminee(r)) return 'Terminée';
     return String(r['statut'] ?? '');
@@ -281,6 +288,7 @@ export class ReservationsHistoriqueComponent {
 
   statutClass(r: ReservationResponse): string {
     if (this.isAnnulee(r)) return 'annulee';
+    if (this.isEnAttente(r)) return 'attente';
     if (this.isAVenir(r)) return 'avenir';
     return 'terminee';
   }

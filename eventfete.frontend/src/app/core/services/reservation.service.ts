@@ -47,6 +47,16 @@ export class ReservationService {
     return this.http.get<ReservationResponse[]>(`${this.API}/proprio`);
   }
 
+  // PUT /api/reservations/{id}/accepter (PROPRIETAIRE)
+  accepter(id: number): Observable<ReservationResponse> {
+    return this.http.put<ReservationResponse>(`${this.API}/${id}/accepter`, {});
+  }
+
+  // PUT /api/reservations/{id}/refuser-proprio (PROPRIETAIRE)
+  refuserProprio(id: number, motif?: string): Observable<ReservationResponse> {
+    return this.http.put<ReservationResponse>(`${this.API}/${id}/refuser-proprio`, { motif });
+  }
+
   // GET /api/reservations/{id}
   getById(id: number): Observable<ReservationResponse> {
     return this.http.get<ReservationResponse>(`${this.API}/${id}`);

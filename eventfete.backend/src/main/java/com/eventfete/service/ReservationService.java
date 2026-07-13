@@ -16,4 +16,8 @@ public interface ReservationService {
     List<Map<String, Object>> getReservationsProprio(String emailProprio);
 
     Map<String, Object> getReservationById(Long id);
+
+    Map<String, Object> accepterReservation(Long id, String emailProprio);
+
+    Map<String, Object> refuserReservationProprio(Long id, String emailProprio, String motif);
 }

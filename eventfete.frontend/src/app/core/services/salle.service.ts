@@ -26,6 +26,7 @@ export interface SalleRecherche {
   capacite?: number;
   tri?: string;      // ex: 'prix'
   keyword?: string;
+  date?: string;      // format ISO 'YYYY-MM-DD'
 }
 
 @Injectable({ providedIn: 'root' })
@@ -34,13 +35,14 @@ export class SalleService {
 
   constructor(private http: HttpClient) {}
 
-  // GET /api/salles/search?ville=...&capacite=...&tri=...&keyword=...
+  // GET /api/salles/search?ville=...&capacite=...&tri=...&keyword=...&date=...
   rechercher(criteres: SalleRecherche): Observable<SalleResponse[]> {
     let params = new HttpParams();
     if (criteres.ville) params = params.set('ville', criteres.ville);
     if (criteres.capacite != null) params = params.set('capacite', criteres.capacite);
     if (criteres.tri) params = params.set('tri', criteres.tri);
     if (criteres.keyword) params = params.set('keyword', criteres.keyword);
+    if (criteres.date) params = params.set('date', criteres.date);
 
     return this.http.get<SalleResponse[]>(`${this.API}/search`, { params });
   }

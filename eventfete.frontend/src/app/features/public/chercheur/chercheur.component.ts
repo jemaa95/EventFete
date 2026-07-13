@@ -21,6 +21,10 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
           <mat-icon>people</mat-icon>
           <input formControlName="capacite" placeholder="Capacité min." type="number">
         </div>
+        <div class="search-field">
+          <mat-icon>calendar_today</mat-icon>
+          <input formControlName="date" type="date">
+        </div>
         <div class="search-field select-field">
           <mat-icon>sort</mat-icon>
           <select formControlName="tri">
@@ -35,7 +39,10 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
       </form>
 
       <h1>Résultats de recherche</h1>
-      <p class="results-count" *ngIf="!loading()">{{ salles().length }} salle(s) trouvée(s)</p>
+      <p class="results-count" *ngIf="!loading()">
+        {{ salles().length }} salle(s) trouvée(s)
+        <span *ngIf="form.value.date"> · disponibles le {{ formatDate(form.value.date) }}</span>
+      </p>
 
       <div *ngIf="loading()" class="spinner-wrap">
         <mat-spinner></mat-spinner>
@@ -185,6 +192,7 @@ export class ChercheurComponent {
       ville: [params.get('ville') || ''],
       capacite: [params.get('capacite') ? Number(params.get('capacite')) : null],
       tri: [''],
+      date: [params.get('date') || ''],
     });
 
     this.load();
@@ -196,12 +204,13 @@ export class ChercheurComponent {
 
   private load() {
     this.loading.set(true);
-    const { ville, capacite, tri } = this.form.value;
+    const { ville, capacite, tri, date } = this.form.value;
 
     this.salleService.rechercher({
       ville: ville || undefined,
       capacite: capacite || undefined,
       tri: tri || undefined,
+      date: date || undefined,
     }).subscribe({
       next: (data) => {
         this.salles.set(data);
@@ -212,5 +221,10 @@ export class ChercheurComponent {
         this.loading.set(false);
       },
     });
+  }
+
+  formatDate(date: string): string {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 }

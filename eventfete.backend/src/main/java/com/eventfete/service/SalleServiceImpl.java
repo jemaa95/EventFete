@@ -8,14 +8,18 @@ import com.eventfete.enums.KycStatut;
 import com.eventfete.exception.ConflictException;
 import com.eventfete.exception.ResourceNotFoundException;
 import com.eventfete.mapper.SalleMapper;
+import com.eventfete.repository.ReservationRepository;
 import com.eventfete.repository.SalleRepository;
 import com.eventfete.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +29,7 @@ public class SalleServiceImpl implements SalleService {
     private final SalleRepository salleRepository;
     private final UserRepository userRepository;
     private final SalleMapper salleMapper;
+    private final ReservationRepository reservationRepository;
 
     @Override
     public SalleResponse creerSalle(Salle salle,
@@ -130,7 +135,8 @@ public class SalleServiceImpl implements SalleService {
     public List<SalleResponse> rechercherSalles(String ville,
                                                 Integer capacite,
                                                 String tri,
-                                                String keyword) {
+                                                String keyword,
+                                                LocalDate date) {
         List<Salle> salles;
 
         if (keyword != null && !keyword.isEmpty()) {
@@ -162,6 +168,21 @@ public class SalleServiceImpl implements SalleService {
             } else {
                 salles = salleRepository.findByStatut(StatutSalle.VALIDEE, sort);
             }
+        }
+
+        // Filtre de disponibilité par date (optionnel) : on exclut les salles
+        // ayant déjà une réservation EN_COURS ou CONFIRMEE ce jour-là.
+        if (date != null) {
+            LocalDateTime debutJournee = date.atStartOfDay();
+            LocalDateTime finJournee = date.plusDays(1).atStartOfDay();
+
+            Set<Long> indisponibles = new java.util.HashSet<>(
+                    reservationRepository.findSalleIdsIndisponibles(debutJournee, finJournee)
+            );
+
+            salles = salles.stream()
+                    .filter(s -> !indisponibles.contains(s.getId()))
+                    .collect(Collectors.toList());
         }
 
         return salles.stream()

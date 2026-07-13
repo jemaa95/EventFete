@@ -16,7 +16,7 @@ public interface SalleService {
     SalleResponse getSalleById(Long id);
 
     List<SalleResponse> rechercherSalles(String ville, Integer capacite,
-                                         String tri, String keyword);
+                                         String tri, String keyword, java.time.LocalDate date);
 
     List<SalleResponse> getSallesByProprio(String emailProprio);
 

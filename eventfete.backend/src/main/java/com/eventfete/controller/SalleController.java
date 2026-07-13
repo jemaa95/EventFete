@@ -20,16 +20,19 @@ public class SalleController {
 
     private final SalleService salleService;
 
-    // GET /api/salles/search?ville=Casablanca&capacite=100&tri=prix
+    // GET /api/salles/search?ville=Casablanca&capacite=100&tri=prix&date=2026-08-15
     @GetMapping("/search")
     public ResponseEntity<List<SalleResponse>> rechercher(
             @RequestParam(required = false) String ville,
             @RequestParam(required = false) Integer capacite,
             @RequestParam(required = false) String tri,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false)
+            @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+            java.time.LocalDate date) {
 
         List<SalleResponse> salles = salleService.rechercherSalles(
-                ville, capacite, tri, keyword
+                ville, capacite, tri, keyword, date
         );
         return ResponseEntity.ok(salles);
     }

@@ -161,11 +161,12 @@ export class HomeComponent {
   }
 
   onSearch() {
-    const { ville, capacite } = this.form.value;
+    const { ville, capacite, date } = this.form.value;
     this.router.navigate(['/chercheur'], {
       queryParams: {
         ville: ville || null,
         capacite: capacite || null,
+        date: date || null,
       },
     });
   }

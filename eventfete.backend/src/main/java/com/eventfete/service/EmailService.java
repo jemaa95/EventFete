@@ -60,6 +60,28 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    // Email au client : demande envoyée, en attente d'acceptation par le propriétaire
+    @Async
+    public void envoyerDemandeEnAttente(String emailClient,
+                                        String nomClient,
+                                        String nomSalle,
+                                        String dateDebut,
+                                        String dateFin) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailClient);
+        message.setSubject("⏳ Demande de réservation envoyée - EventFete");
+        message.setText(
+                "Bonjour " + nomClient + ",\n\n" +
+                        "Votre demande de réservation a bien été envoyée au propriétaire.\n\n" +
+                        "📍 Salle : " + nomSalle + "\n" +
+                        "📅 Du : " + dateDebut + "\n" +
+                        "📅 Au : " + dateFin + "\n\n" +
+                        "Vous recevrez un email dès que le propriétaire aura accepté ou refusé votre demande.\n\n" +
+                        "L'équipe EventFete 🎉"
+        );
+        mailSender.send(message);
+    }
+
     // Email d'annulation
     @Async
     public void envoyerConfirmationAnnulation(String emailClient,

@@ -103,12 +103,14 @@ public class ReservationServiceImpl implements ReservationService {
                 .multiply(BigDecimal.valueOf(nbJours));
 
         // Créer la réservation
+        // ⚠️ Statut initial EN_COURS : la réservation n'est confirmée qu'après
+        // acceptation explicite du propriétaire (voir accepterReservation).
         Reservation reservation = Reservation.builder()
                 .salle(salle)
                 .client(client)
                 .dateDebut(request.getDateDebut())
                 .dateFin(request.getDateFin())
-                .statut(StatutReservation.CONFIRMEE)
+                .statut(StatutReservation.EN_COURS)
                 .montantTotal(montantTotal)
                 .typeEvenement(request.getTypeEvenement())
                 .nombreInvites(request.getNombreInvites())
@@ -118,18 +120,19 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation saved = reservationRepository.save(reservation);
 
-        // Libérer le verrou Redis après confirmation (RG-04)
+        // Le verrou Redis n'est PAS libéré ici : il reste actif (TTL 15 min)
+        // pendant la fenêtre de décision du propriétaire ; la contrainte
+        // existsConflict (EN_COURS + CONFIRMEE) protège le créneau au-delà.
         redisTemplate.delete(redisKey);
 
         // Notifications email asynchrones : n'impactent pas la réponse HTTP
         // ni le succès de la réservation en cas d'erreur SMTP.
-        emailService.envoyerConfirmationReservation(
+        emailService.envoyerDemandeEnAttente(
                 client.getEmail(),
                 client.getPrenom(),
                 salle.getNom(),
                 request.getDateDebut().format(DATE_FORMAT),
-                request.getDateFin().format(DATE_FORMAT),
-                montantTotal.toString()
+                request.getDateFin().format(DATE_FORMAT)
         );
 
         emailService.envoyerNotificationProprio(
@@ -200,6 +203,75 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
+    public Map<String, Object> accepterReservation(Long id, String emailProprio) {
+        Reservation reservation = findReservationDuProprio(id, emailProprio);
+
+        if (reservation.getStatut() != StatutReservation.EN_COURS) {
+            throw new ConflictException(
+                    "Seule une réservation en attente peut être acceptée"
+            );
+        }
+
+        reservation.setStatut(StatutReservation.CONFIRMEE);
+        Reservation updated = reservationRepository.save(reservation);
+
+        emailService.envoyerConfirmationReservation(
+                reservation.getClient().getEmail(),
+                reservation.getClient().getPrenom(),
+                reservation.getSalle().getNom(),
+                reservation.getDateDebut().format(DATE_FORMAT),
+                reservation.getDateFin().format(DATE_FORMAT),
+                reservation.getMontantTotal().toString()
+        );
+
+        return reservationMapper.toResponse(updated);
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> refuserReservationProprio(Long id, String emailProprio, String motif) {
+        Reservation reservation = findReservationDuProprio(id, emailProprio);
+
+        if (reservation.getStatut() != StatutReservation.EN_COURS) {
+            throw new ConflictException(
+                    "Seule une réservation en attente peut être refusée"
+            );
+        }
+
+        String motifFinal = (motif == null || motif.isBlank())
+                ? "Refusée par le propriétaire"
+                : "Refusée par le propriétaire : " + motif;
+
+        reservation.setStatut(StatutReservation.ANNULEE);
+        reservation.setMotifAnnulation(motifFinal);
+        Reservation updated = reservationRepository.save(reservation);
+
+        emailService.envoyerConfirmationAnnulation(
+                reservation.getClient().getEmail(),
+                reservation.getClient().getPrenom(),
+                reservation.getSalle().getNom(),
+                motifFinal
+        );
+
+        return reservationMapper.toResponse(updated);
+    }
+
+    private Reservation findReservationDuProprio(Long id, String emailProprio) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Réservation", id
+                ));
+
+        if (!reservation.getSalle().getProprietaire().getEmail().equals(emailProprio)) {
+            throw new ConflictException(
+                    "Vous n'êtes pas autorisé à gérer cette réservation"
+            );
+        }
+        return reservation;
+    }
+
+    @Override
     public List<Map<String, Object>> getMesReservations(String emailClient) {
         User client = userRepository.findByEmail(emailClient)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -222,9 +294,7 @@ public class ReservationServiceImpl implements ReservationService {
                 ));
 
         return reservationRepository
-                .findByProprioAndStatut(
-                        proprio.getId(), StatutReservation.CONFIRMEE
-                )
+                .findByProprio(proprio.getId())
                 .stream()
                 .map(reservationMapper::toResponse)
                 .collect(Collectors.toList());

@@ -108,7 +108,7 @@ const DOCUMENTS_DISPONIBLES = ["Carte d'identité", 'Licence commerciale', 'Cert
             </div>
             <div class="stat-card grad-pink">
               <span class="stat-label">Réservations</span>
-              <span class="stat-value">{{ reservations().length }}</span>
+              <span class="stat-value">{{ reservationsConfirmees().length }}</span>
             </div>
             <div class="stat-card grad-blue">
               <span class="stat-label">Salles actives</span>
@@ -125,6 +125,7 @@ const DOCUMENTS_DISPONIBLES = ["Carte d'identité", 'Licence commerciale', 'Cert
               <div class="card">
                 <div class="card-header">
                   <h3>Prochaines réservations</h3>
+                  <a routerLink="/reservations-recues" class="voir-tout">Voir tout →</a>
                 </div>
                 <div class="resa-row" *ngFor="let r of prochainesReservations()">
                   <div>
@@ -231,6 +232,9 @@ const DOCUMENTS_DISPONIBLES = ["Carte d'identité", 'Licence commerciale', 'Cert
     .col-side { display: flex; flex-direction: column; gap: 20px; }
     .card { background: #fff; border: 1px solid #eef0f3; border-radius: 16px; padding: 22px; }
     .card h3 { margin: 0 0 14px; font-size: 1rem; font-weight: 700; color: #1e293b; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .card-header h3 { margin: 0; }
+    .voir-tout { color: var(--primary); font-size: 0.82rem; font-weight: 600; text-decoration: none; }
     .muted { color: #94a3b8; font-size: 0.82rem; margin: 2px 0 0; }
     .empty { padding: 16px 0; }
 
@@ -280,6 +284,10 @@ export class DashboardComponent {
       .reduce((sum, r) => sum + Number(r['montantTotal'] ?? 0), 0)
   );
 
+  reservationsConfirmees = computed(() =>
+    this.reservations().filter(r => r['statut'] === 'CONFIRMEE')
+  );
+
   noteMoyenne = computed(() => {
     const notes = this.salles().map(s => s.note).filter((n): n is number => n != null);
     if (notes.length === 0) return '—';
@@ -288,7 +296,7 @@ export class DashboardComponent {
 
   prochainesReservations = computed(() =>
     this.reservations()
-      .filter(r => new Date(r['dateDebut'] as string) > new Date())
+      .filter(r => r['statut'] === 'CONFIRMEE' && new Date(r['dateDebut'] as string) > new Date())
       .sort((a, b) => new Date(a['dateDebut'] as string).getTime() - new Date(b['dateDebut'] as string).getTime())
       .slice(0, 4)
   );
