@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -56,10 +56,10 @@ import { AuthService } from '../../../core/services/auth.service';
               mat-raised-button color="primary"
               class="submit-btn"
               type="submit"
-              [disabled]="form.invalid || loading"
+              [disabled]="form.invalid || loading()"
             >
-              <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-              <span *ngIf="!loading">Se connecter</span>
+              <mat-spinner *ngIf="loading()" diameter="20"></mat-spinner>
+              <span *ngIf="!loading()">Se connecter</span>
             </button>
           </form>
 
@@ -115,7 +115,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  loading = false;
+  loading = signal(false);
   hidePassword = true;
 
   constructor(
@@ -134,14 +134,14 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.form.invalid) return;
-    this.loading = true;
+    this.loading.set(true);
     this.authService.login(this.form.value).subscribe({
       next: () => {
         const role = this.authService.currentUser()?.role;
         this.router.navigate([role === 'ROLE_PROPRIO' ? '/dashboard' : '/']);
       },
       error: () => {
-        this.loading = false;
+        this.loading.set(false);
         this.snackBar.open('Email ou mot de passe incorrect', 'Fermer', { duration: 4000 });
       },
     });

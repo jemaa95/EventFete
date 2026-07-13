@@ -1,16 +1,18 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReservationService, ReservationResponse } from '../../core/services/reservation.service';
+import { AvisService } from '../../core/services/avis.service';
 
 type Filtre = 'toutes' | 'avenir' | 'terminees' | 'annulees';
 
 @Component({
   selector: 'app-reservations-historique',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatSnackBarModule, MatProgressSpinnerModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatSnackBarModule, MatProgressSpinnerModule],
   template: `
     <div class="page-container">
       <h1>Historique des réservations</h1>
@@ -76,6 +78,33 @@ type Filtre = 'toutes' | 'avenir' | 'terminees' | 'annulees';
                 </button>
                 <button type="button" class="btn-primary" *ngIf="isTerminee(r)">
                   Reçu
+                </button>
+                <button
+                  type="button"
+                  class="btn-outline-primary"
+                  *ngIf="isTerminee(r) && reviewingId() !== r['id']"
+                  (click)="ouvrirAvis(r)"
+                >
+                  Laisser un avis
+                </button>
+              </div>
+            </div>
+
+            <div class="review-form" *ngIf="reviewingId() === r['id']">
+              <label>Votre note</label>
+              <div class="star-picker">
+                <mat-icon
+                  *ngFor="let i of [1,2,3,4,5]"
+                  inline
+                  [class.filled]="i <= reviewNote"
+                  (click)="reviewNote = i"
+                >star</mat-icon>
+              </div>
+              <textarea [(ngModel)]="reviewComment" rows="2" placeholder="Votre commentaire (optionnel)"></textarea>
+              <div class="review-actions">
+                <button type="button" class="btn-outline" (click)="reviewingId.set(null)">Annuler</button>
+                <button type="button" class="btn-primary" (click)="onSubmitAvis(r)" [disabled]="submittingAvis()">
+                  Publier l'avis
                 </button>
               </div>
             </div>
@@ -145,6 +174,22 @@ type Filtre = 'toutes' | 'avenir' | 'terminees' | 'annulees';
       background: var(--gradient); border: none; color: #fff;
       border-radius: 8px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
     }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-outline-primary {
+      background: #fff; border: 1px solid var(--primary); color: var(--primary);
+      border-radius: 8px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    }
+
+    .review-form { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+    .review-form label { font-size: 0.78rem; color: #64748b; display: block; margin-bottom: 6px; }
+    .star-picker { display: flex; gap: 4px; margin-bottom: 8px; }
+    .star-picker mat-icon { font-size: 24px; width: 24px; height: 24px; color: #e2e8f0; cursor: pointer; }
+    .star-picker mat-icon.filled { color: #f59e0b; }
+    .review-form textarea {
+      width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px;
+      font-family: inherit; font-size: 0.85rem; resize: vertical; outline: none;
+    }
+    .review-actions { display: flex; gap: 8px; margin-top: 8px; }
 
     @media (max-width: 640px) {
       .resa-card { flex-direction: column; }
@@ -188,8 +233,14 @@ export class ReservationsHistoriqueComponent {
     }
   });
 
+  reviewingId = signal<number | null>(null);
+  submittingAvis = signal(false);
+  reviewNote = 5;
+  reviewComment = '';
+
   constructor(
     private reservationService: ReservationService,
+    private avisService: AvisService,
     private snackBar: MatSnackBar,
   ) {
     this.load();
@@ -267,6 +318,33 @@ export class ReservationsHistoriqueComponent {
       error: () => {
         this.cancelling.set(null);
         this.snackBar.open("Erreur lors de l'annulation", 'Fermer', { duration: 4000 });
+      },
+    });
+  }
+
+  ouvrirAvis(r: ReservationResponse) {
+    this.reviewingId.set(r['id'] as number);
+    this.reviewNote = 5;
+    this.reviewComment = '';
+  }
+
+  onSubmitAvis(r: ReservationResponse) {
+    this.submittingAvis.set(true);
+
+    this.avisService.creer({
+      reservationId: r['id'] as number,
+      note: this.reviewNote,
+      commentaire: this.reviewComment.trim() || undefined,
+    }).subscribe({
+      next: () => {
+        this.submittingAvis.set(false);
+        this.reviewingId.set(null);
+        this.snackBar.open('Avis publié, merci !', 'OK', { duration: 3000 });
+      },
+      error: (err) => {
+        this.submittingAvis.set(false);
+        const message = err.error?.message || "Erreur lors de l'envoi de l'avis";
+        this.snackBar.open(message, 'Fermer', { duration: 4000 });
       },
     });
   }

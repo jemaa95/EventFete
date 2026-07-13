@@ -24,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     @Override
     public AuthResponse register(RegisterRequest request) {
@@ -47,6 +48,11 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
+
+        // Email de bienvenue envoyé de façon asynchrone : n'impacte pas le
+        // temps de réponse de l'inscription, et une erreur SMTP éventuelle
+        // (ex: identifiants Gmail non configurés) ne fait pas échouer l'inscription.
+        emailService.envoyerEmailBienvenue(user.getEmail(), user.getPrenom());
 
         // Générer les tokens
         String accessToken = jwtUtil.generateToken(

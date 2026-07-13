@@ -13,5 +13,6 @@ export const routes: Routes = [
   { path: 'reservations', loadComponent: () => import('./features/reservations/reservations-historique.component').then(m => m.ReservationsHistoriqueComponent), canActivate: [authGuard] },
   { path: 'profil', loadComponent: () => import('./features/profil/profil.component').then(m => m.ProfilComponent), canActivate: [authGuard] },
   { path: 'admin', loadComponent: () => import('./features/admin/kyc/admin-kyc.component').then(m => m.AdminKycComponent), canActivate: [authGuard] },
+  { path: 'admin/salles', loadComponent: () => import('./features/admin/salles/admin-salles.component').then(m => m.AdminSallesComponent), canActivate: [authGuard] },
   { path: '**', redirectTo: '' },
 ];

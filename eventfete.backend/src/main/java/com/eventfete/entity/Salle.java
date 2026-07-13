@@ -64,6 +64,7 @@ public class Salle {
     private Double note;
 
     @Column(name = "nb_avis")
+    @Builder.Default
     private Integer nbAvis = 0;
 
     @Column(name = "created_at")

@@ -1,18 +1,21 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { map, startWith } from 'rxjs/operators';
 import { SalleService, SalleResponse } from '../../../core/services/salle.service';
+import { AvisService, AvisResponse } from '../../../core/services/avis.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
   imports: [
-    CommonModule, RouterLink, ReactiveFormsModule,
-    MatIconModule, MatProgressSpinnerModule,
+    CommonModule, RouterLink, ReactiveFormsModule, FormsModule,
+    MatIconModule, MatProgressSpinnerModule, MatSnackBarModule,
   ],
   template: `
     <div class="page-container">
@@ -54,6 +57,52 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
             <div class="info-card">
               <h2>Description</h2>
               <p class="description">{{ s.description }}</p>
+            </div>
+
+            <div class="info-card">
+              <h2>Avis clients ({{ avisList().length }})</h2>
+
+              <p *ngIf="avisList().length === 0" class="no-avis">
+                Aucun avis pour le moment.
+              </p>
+
+              <div class="avis-item" *ngFor="let a of avisList()">
+                <div class="avis-top">
+                  <strong>{{ a.clientNom }}</strong>
+                  <span class="avis-stars">
+                    <mat-icon *ngFor="let i of [1,2,3,4,5]" inline
+                      [class.filled]="i <= a.note">star</mat-icon>
+                  </span>
+                </div>
+                <p class="avis-comment" *ngIf="a.commentaire">{{ a.commentaire }}</p>
+                <span class="avis-date">{{ formatDate(a.createdAt) }}</span>
+
+                <div class="reponse-proprio" *ngIf="a.reponseProprio">
+                  <mat-icon inline>storefront</mat-icon>
+                  <div>
+                    <strong>Réponse du propriétaire</strong>
+                    <p>{{ a.reponseProprio }}</p>
+                  </div>
+                </div>
+
+                <!-- Simplification : le formulaire de réponse est visible pour tout
+                     compte ROLE_PROPRIO n'ayant pas déjà répondu ; le backend vérifie
+                     réellement que c'est bien le propriétaire de CETTE salle (403 sinon). -->
+                <div class="reply-form" *ngIf="!a.reponseProprio && isProprio()">
+                  <ng-container *ngIf="replyingId() !== a.id">
+                    <button type="button" class="reply-btn" (click)="replyingId.set(a.id)">
+                      Répondre à cet avis
+                    </button>
+                  </ng-container>
+                  <ng-container *ngIf="replyingId() === a.id">
+                    <textarea [(ngModel)]="replyText" rows="2" placeholder="Votre réponse..."></textarea>
+                    <div class="reply-actions">
+                      <button type="button" class="btn-outline" (click)="replyingId.set(null)">Annuler</button>
+                      <button type="button" class="btn-primary" (click)="onRepondre(a)">Publier la réponse</button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -131,6 +180,35 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
     .info-card h2 { margin: 0 0 12px; font-size: 1.1rem; font-weight: 700; color: #1e293b; }
     .description { color: #475569; line-height: 1.7; margin: 0; }
 
+    .no-avis { color: #94a3b8; font-size: 0.9rem; }
+    .avis-item { border-top: 1px solid #f1f5f9; padding: 16px 0; }
+    .avis-item:first-of-type { border-top: none; padding-top: 0; }
+    .avis-top { display: flex; align-items: center; justify-content: space-between; }
+    .avis-top strong { font-size: 0.92rem; color: #1e293b; }
+    .avis-stars mat-icon { font-size: 16px; width: 16px; height: 16px; color: #e2e8f0; }
+    .avis-stars mat-icon.filled { color: #f59e0b; }
+    .avis-comment { margin: 6px 0 4px; color: #475569; font-size: 0.88rem; line-height: 1.5; }
+    .avis-date { font-size: 0.75rem; color: #94a3b8; }
+
+    .reponse-proprio {
+      display: flex; gap: 8px; margin-top: 10px; background: var(--nav-active-bg);
+      border-radius: 10px; padding: 10px 12px;
+    }
+    .reponse-proprio mat-icon { color: var(--primary); font-size: 18px; width: 18px; height: 18px; }
+    .reponse-proprio strong { font-size: 0.82rem; color: var(--primary); display: block; margin-bottom: 2px; }
+    .reponse-proprio p { margin: 0; font-size: 0.85rem; color: #475569; }
+
+    .reply-form { margin-top: 10px; }
+    .reply-btn {
+      background: none; border: none; color: var(--primary); font-weight: 600;
+      font-size: 0.82rem; cursor: pointer; padding: 0;
+    }
+    .reply-form textarea {
+      width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px;
+      font-family: inherit; font-size: 0.85rem; resize: vertical; outline: none;
+    }
+    .reply-actions { display: flex; gap: 8px; margin-top: 8px; }
+
     .booking-card {
       background: #fff; border: 1px solid #eef0f3; border-radius: 16px; padding: 24px;
       position: sticky; top: 88px;
@@ -175,10 +253,17 @@ export class EventDetailComponent implements OnInit {
   formInvalid$;
   fallbackImg = 'https://images.unsplash.com/photo-1780542900375-0cf459e38fbb?w=900';
 
+  avisList = signal<AvisResponse[]>([]);
+  replyingId = signal<number | null>(null);
+  replyText = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private salleService: SalleService,
+    private avisService: AvisService,
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
@@ -197,6 +282,35 @@ export class EventDetailComponent implements OnInit {
     this.salleService.getById(id).subscribe({
       next: data => { this.salle.set(data); this.loading.set(false); },
       error: () => { this.loading.set(false); },
+    });
+
+    this.avisService.getBySalle(id).subscribe({
+      next: (list) => this.avisList.set(list),
+      error: () => {},
+    });
+  }
+
+  isProprio(): boolean {
+    return this.authService.currentUser()?.role === 'ROLE_PROPRIO';
+  }
+
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  onRepondre(a: AvisResponse) {
+    if (!this.replyText.trim()) return;
+
+    this.avisService.repondre(a.id, this.replyText.trim()).subscribe({
+      next: (updated) => {
+        this.avisList.set(this.avisList().map(item => item.id === updated.id ? updated : item));
+        this.replyingId.set(null);
+        this.replyText = '';
+        this.snackBar.open('Réponse publiée', 'OK', { duration: 3000 });
+      },
+      error: () => {
+        this.snackBar.open("Erreur lors de l'envoi de la réponse", 'Fermer', { duration: 4000 });
+      },
     });
   }
 

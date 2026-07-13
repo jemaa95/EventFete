@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,10 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
     private final RedisTemplate<String, String> redisTemplate;
+    private final EmailService emailService;
+
+    private static final DateTimeFormatter DATE_FORMAT =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private static final String REDIS_KEY_PREFIX = "lock:salle:";
     private static final long LOCK_DURATION_MINUTES = 15;
@@ -116,6 +121,26 @@ public class ReservationServiceImpl implements ReservationService {
         // Libérer le verrou Redis après confirmation (RG-04)
         redisTemplate.delete(redisKey);
 
+        // Notifications email asynchrones : n'impactent pas la réponse HTTP
+        // ni le succès de la réservation en cas d'erreur SMTP.
+        emailService.envoyerConfirmationReservation(
+                client.getEmail(),
+                client.getPrenom(),
+                salle.getNom(),
+                request.getDateDebut().format(DATE_FORMAT),
+                request.getDateFin().format(DATE_FORMAT),
+                montantTotal.toString()
+        );
+
+        emailService.envoyerNotificationProprio(
+                salle.getProprietaire().getEmail(),
+                salle.getProprietaire().getPrenom(),
+                client.getPrenom() + " " + client.getNom(),
+                salle.getNom(),
+                request.getDateDebut().format(DATE_FORMAT),
+                request.getDateFin().format(DATE_FORMAT)
+        );
+
         return reservationMapper.toResponse(saved);
     }
 
@@ -163,6 +188,14 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setMotifAnnulation(messageRemboursement);
 
         Reservation updated = reservationRepository.save(reservation);
+
+        emailService.envoyerConfirmationAnnulation(
+                reservation.getClient().getEmail(),
+                reservation.getClient().getPrenom(),
+                reservation.getSalle().getNom(),
+                messageRemboursement
+        );
+
         return reservationMapper.toResponse(updated);
     }
 
