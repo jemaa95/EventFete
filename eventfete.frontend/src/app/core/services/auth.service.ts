@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface LoginPayload {
   email: string;
@@ -44,7 +45,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'ef_token';
   private readonly REFRESH_KEY = 'ef_refresh_token';
   private readonly USER_KEY = 'ef_user';
-  private readonly API = 'http://localhost:8080/api/auth';
+  private readonly API = `${environment.apiUrl}/auth`;
   private readonly isBrowser: boolean;
 
   currentUser = signal<CurrentUser | null>(null);

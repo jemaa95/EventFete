@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export type ModePaiement = 'CARTE' | 'VIREMENT' | 'SUR_PLACE' | 'PAYPAL';
 
@@ -23,7 +24,7 @@ export type ReservationResponse = Record<string, unknown>;
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
-  private readonly API = 'http://localhost:8080/api/reservations';
+  private readonly API = `${environment.apiUrl}/reservations`;
 
   constructor(private http: HttpClient) {}
 
