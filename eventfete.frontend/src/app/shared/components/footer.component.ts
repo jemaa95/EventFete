@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <footer class="site-footer">
-      <p>© {{ year }} EventFete — Tous droits réservés. Copyright by Jemaa Kourda {{ year }}.</p>
+      <p>© 2026 EventFete — Tous droits réservés. Copyright by Jemaa Kourda 2026.</p>
     </footer>
   `,
   styles: [`
@@ -19,6 +19,4 @@ import { Component } from '@angular/core';
     }
   `]
 })
-export class FooterComponent {
-  year = new Date().getFullYear();
-}
+export class FooterComponent {}
