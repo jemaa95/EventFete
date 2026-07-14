@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  imports: [TranslatePipe],
   template: `
     <footer class="site-footer">
-      <p>© 2026 EventFete — Copyright by Jemaa Kourda. Tous droits réservés.</p>
+      <p>{{ 'FOOTER.TEXT' | translate }}</p>
     </footer>
   `,
   styles: [`
