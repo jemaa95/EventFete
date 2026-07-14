@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <footer class="site-footer">
-      <p>© 2026 EventFete — Tous droits réservés. Copyright by Jemaa Kourda 2026.</p>
+      <p>© 2026 EventFete — Copyright by Jemaa Kourda. Tous droits réservés.</p>
     </footer>
   `,
   styles: [`
