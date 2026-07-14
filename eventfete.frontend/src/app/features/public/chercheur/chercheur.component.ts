@@ -4,22 +4,23 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SalleService, SalleResponse } from '../../../core/services/salle.service';
 
 @Component({
   selector: 'app-chercheur',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, MatIconModule, MatProgressSpinnerModule, TranslatePipe],
   template: `
     <div class="page-container">
       <form [formGroup]="form" (ngSubmit)="onSearch()" class="filter-bar">
         <div class="search-field">
           <mat-icon>location_on</mat-icon>
-          <input formControlName="ville" placeholder="Ville" type="text">
+          <input formControlName="ville" [placeholder]="'CHERCHEUR.VILLE_PLACEHOLDER' | translate" type="text">
         </div>
         <div class="search-field">
           <mat-icon>people</mat-icon>
-          <input formControlName="capacite" placeholder="Capacité min." type="number">
+          <input formControlName="capacite" [placeholder]="'CHERCHEUR.CAPACITE_PLACEHOLDER' | translate" type="number">
         </div>
         <div class="search-field">
           <mat-icon>calendar_today</mat-icon>
@@ -28,20 +29,20 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
         <div class="search-field select-field">
           <mat-icon>sort</mat-icon>
           <select formControlName="tri">
-            <option value="">Pertinence</option>
-            <option value="prix">Prix croissant</option>
-            <option value="note">Meilleures notes</option>
+            <option value="">{{ 'CHERCHEUR.TRI_PERTINENCE' | translate }}</option>
+            <option value="prix">{{ 'CHERCHEUR.TRI_PRIX' | translate }}</option>
+            <option value="note">{{ 'CHERCHEUR.TRI_NOTE' | translate }}</option>
           </select>
         </div>
         <button type="submit" class="search-btn">
-          <mat-icon>search</mat-icon> Rechercher
+          <mat-icon>search</mat-icon> {{ 'CHERCHEUR.RECHERCHER_BTN' | translate }}
         </button>
       </form>
 
-      <h1>Résultats de recherche</h1>
+      <h1>{{ 'CHERCHEUR.TITLE' | translate }}</h1>
       <p class="results-count" *ngIf="!loading()">
-        {{ salles().length }} salle(s) trouvée(s)
-        <span *ngIf="form.value.date"> · disponibles le {{ formatDate(form.value.date) }}</span>
+        {{ salles().length }} {{ 'CHERCHEUR.RESULTS_COUNT' | translate }}
+        <span *ngIf="form.value.date"> · {{ 'CHERCHEUR.DISPONIBLES_LE' | translate }} {{ formatDate(form.value.date) }}</span>
       </p>
 
       <div *ngIf="loading()" class="spinner-wrap">
@@ -50,7 +51,7 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
 
       <div *ngIf="!loading() && salles().length === 0" class="empty-state">
         <mat-icon>search_off</mat-icon>
-        <p>Aucune salle ne correspond à votre recherche.</p>
+        <p>{{ 'CHERCHEUR.EMPTY' | translate }}</p>
       </div>
 
       <div *ngIf="!loading() && salles().length > 0" class="salles-grid">
@@ -64,10 +65,10 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
           <div class="salle-body">
             <h3>{{ s.nom }}</h3>
             <p class="salle-location"><mat-icon inline>location_on</mat-icon> {{ s.ville }}</p>
-            <p class="salle-capacite"><mat-icon inline>people</mat-icon> Capacité : {{ s.capacite }} personnes</p>
+            <p class="salle-capacite"><mat-icon inline>people</mat-icon> {{ 'CHERCHEUR.CAPACITE_LABEL' | translate }} {{ s.capacite }} {{ 'CHERCHEUR.PERSONNES' | translate }}</p>
             <div class="salle-footer">
-              <span class="salle-price">{{ s.prixJour | number }} MAD<small>/jour</small></span>
-              <span class="salle-link">Voir les détails →</span>
+              <span class="salle-price">{{ s.prixJour | number }} MAD<small>{{ 'CHERCHEUR.PAR_JOUR' | translate }}</small></span>
+              <span class="salle-link">{{ 'CHERCHEUR.VOIR_DETAILS' | translate }}</span>
             </div>
           </div>
         </a>

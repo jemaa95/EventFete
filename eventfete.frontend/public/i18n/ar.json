@@ -1,0 +1,50 @@
+{
+  "NAVBAR": {
+    "BRAND": "فيت دو ليفينمو",
+    "ACCUEIL": "الرئيسية",
+    "CHERCHEUR": "البحث",
+    "RESERVATIONS": "الحجوزات",
+    "PROFIL": "الملف الشخصي",
+    "PROPRIETAIRE": "المالك",
+    "ADMINISTRATEUR": "المسؤول",
+    "CONNEXION": "تسجيل الدخول",
+    "SINSCRIRE": "إنشاء حساب",
+    "DECONNEXION": "تسجيل الخروج"
+  },
+  "HOME": {
+    "TITLE": "ابحث عن القاعة المثالية",
+    "SUBTITLE": "آلاف القاعات لجميع مناسباتكم",
+    "VILLE_PLACEHOLDER": "المدينة",
+    "CAPACITE_PLACEHOLDER": "السعة",
+    "RECHERCHER_BTN": "ابحث عن قاعة",
+    "WHY_TITLE": "لماذا تختار EventFete؟",
+    "WHY_1_TITLE": "بحث سهل",
+    "WHY_1_DESC": "اعثر على القاعة المثالية ببضع نقرات حسب معاييرك",
+    "WHY_2_TITLE": "في جميع أنحاء المغرب",
+    "WHY_2_DESC": "قاعات متوفرة في جميع المدن الكبرى",
+    "WHY_3_TITLE": "حجز بسيط",
+    "WHY_3_DESC": "عملية حجز سريعة وآمنة في 3 خطوات"
+  },
+  "CHERCHEUR": {
+    "VILLE_PLACEHOLDER": "المدينة",
+    "CAPACITE_PLACEHOLDER": "السعة الدنيا",
+    "TRI_PERTINENCE": "الأكثر صلة",
+    "TRI_PRIX": "السعر تصاعدي",
+    "TRI_NOTE": "الأفضل تقييمًا",
+    "RECHERCHER_BTN": "بحث",
+    "TITLE": "نتائج البحث",
+    "RESULTS_COUNT": "قاعة (قاعات) موجودة",
+    "DISPONIBLES_LE": "متوفرة بتاريخ",
+    "EMPTY": "لا توجد قاعة مطابقة لبحثك.",
+    "CAPACITE_LABEL": "السعة:",
+    "PERSONNES": "شخص",
+    "VOIR_DETAILS": "← عرض التفاصيل",
+    "PAR_JOUR": "/اليوم",
+    "AVIS": "تقييم"
+  },
+  "LANG_SWITCH": {
+    "FR": "Français",
+    "EN": "English",
+    "AR": "العربية"
+  }
+}

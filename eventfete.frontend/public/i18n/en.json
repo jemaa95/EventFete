@@ -1,0 +1,50 @@
+{
+  "NAVBAR": {
+    "BRAND": "EventFete",
+    "ACCUEIL": "Home",
+    "CHERCHEUR": "Search",
+    "RESERVATIONS": "Bookings",
+    "PROFIL": "Profile",
+    "PROPRIETAIRE": "Owner",
+    "ADMINISTRATEUR": "Admin",
+    "CONNEXION": "Log in",
+    "SINSCRIRE": "Sign up",
+    "DECONNEXION": "Log out"
+  },
+  "HOME": {
+    "TITLE": "Find your perfect venue",
+    "SUBTITLE": "Thousands of venues for all your events",
+    "VILLE_PLACEHOLDER": "City",
+    "CAPACITE_PLACEHOLDER": "Capacity",
+    "RECHERCHER_BTN": "Search a venue",
+    "WHY_TITLE": "Why choose EventFete?",
+    "WHY_1_TITLE": "Easy search",
+    "WHY_1_DESC": "Find the ideal venue in a few clicks based on your criteria",
+    "WHY_2_TITLE": "All over Morocco",
+    "WHY_2_DESC": "Venues available in every major city",
+    "WHY_3_TITLE": "Simple booking",
+    "WHY_3_DESC": "Fast and secure booking process in 3 steps"
+  },
+  "CHERCHEUR": {
+    "VILLE_PLACEHOLDER": "City",
+    "CAPACITE_PLACEHOLDER": "Min. capacity",
+    "TRI_PERTINENCE": "Relevance",
+    "TRI_PRIX": "Price: low to high",
+    "TRI_NOTE": "Best rated",
+    "RECHERCHER_BTN": "Search",
+    "TITLE": "Search results",
+    "RESULTS_COUNT": "venue(s) found",
+    "DISPONIBLES_LE": "available on",
+    "EMPTY": "No venue matches your search.",
+    "CAPACITE_LABEL": "Capacity:",
+    "PERSONNES": "people",
+    "VOIR_DETAILS": "View details →",
+    "PAR_JOUR": "/day",
+    "AVIS": "reviews"
+  },
+  "LANG_SWITCH": {
+    "FR": "Français",
+    "EN": "English",
+    "AR": "العربية"
+  }
+}

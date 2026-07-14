@@ -1,0 +1,50 @@
+{
+  "NAVBAR": {
+    "BRAND": "Fête de l'événement",
+    "ACCUEIL": "Accueil",
+    "CHERCHEUR": "Chercheur",
+    "RESERVATIONS": "Réservations",
+    "PROFIL": "Profil",
+    "PROPRIETAIRE": "Propriétaire",
+    "ADMINISTRATEUR": "Administrateur",
+    "CONNEXION": "Connexion",
+    "SINSCRIRE": "S'inscrire",
+    "DECONNEXION": "Déconnexion"
+  },
+  "HOME": {
+    "TITLE": "Trouvez votre salle parfaite",
+    "SUBTITLE": "Des milliers de salles pour tous vos événements",
+    "VILLE_PLACEHOLDER": "Ville",
+    "CAPACITE_PLACEHOLDER": "Capacité",
+    "RECHERCHER_BTN": "Rechercher une salle",
+    "WHY_TITLE": "Pourquoi choisir EventFete ?",
+    "WHY_1_TITLE": "Recherche facile",
+    "WHY_1_DESC": "Trouvez la salle idéale en quelques clics selon vos critères",
+    "WHY_2_TITLE": "Partout au Maroc",
+    "WHY_2_DESC": "Des salles disponibles dans toutes les grandes villes",
+    "WHY_3_TITLE": "Réservation simple",
+    "WHY_3_DESC": "Processus de réservation rapide et sécurisé en 3 étapes"
+  },
+  "CHERCHEUR": {
+    "VILLE_PLACEHOLDER": "Ville",
+    "CAPACITE_PLACEHOLDER": "Capacité min.",
+    "TRI_PERTINENCE": "Pertinence",
+    "TRI_PRIX": "Prix croissant",
+    "TRI_NOTE": "Meilleures notes",
+    "RECHERCHER_BTN": "Rechercher",
+    "TITLE": "Résultats de recherche",
+    "RESULTS_COUNT": "salle(s) trouvée(s)",
+    "DISPONIBLES_LE": "disponibles le",
+    "EMPTY": "Aucune salle ne correspond à votre recherche.",
+    "CAPACITE_LABEL": "Capacité :",
+    "PERSONNES": "personnes",
+    "VOIR_DETAILS": "Voir les détails →",
+    "PAR_JOUR": "/jour",
+    "AVIS": "avis"
+  },
+  "LANG_SWITCH": {
+    "FR": "Français",
+    "EN": "English",
+    "AR": "العربية"
+  }
+}

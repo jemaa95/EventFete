@@ -3,20 +3,21 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, TranslatePipe],
   template: `
     <div class="hero">
-      <h1>Trouvez votre salle parfaite</h1>
-      <p class="hero-subtitle">Des milliers de salles pour tous vos événements</p>
+      <h1>{{ 'HOME.TITLE' | translate }}</h1>
+      <p class="hero-subtitle">{{ 'HOME.SUBTITLE' | translate }}</p>
 
       <form [formGroup]="form" (ngSubmit)="onSearch()" class="search-bar">
         <div class="search-field">
           <mat-icon>location_on</mat-icon>
-          <input formControlName="ville" placeholder="Ville" type="text">
+          <input formControlName="ville" [placeholder]="'HOME.VILLE_PLACEHOLDER' | translate" type="text">
         </div>
         <div class="search-field">
           <mat-icon>calendar_today</mat-icon>
@@ -24,31 +25,31 @@ import { MatIconModule } from '@angular/material/icon';
         </div>
         <div class="search-field">
           <mat-icon>people</mat-icon>
-          <input formControlName="capacite" placeholder="Capacité" type="number">
+          <input formControlName="capacite" [placeholder]="'HOME.CAPACITE_PLACEHOLDER' | translate" type="number">
         </div>
         <button type="submit" class="search-btn">
-          <mat-icon>search</mat-icon> Rechercher une salle
+          <mat-icon>search</mat-icon> {{ 'HOME.RECHERCHER_BTN' | translate }}
         </button>
       </form>
     </div>
 
     <div class="why-section">
-      <h2>Pourquoi choisir EventFete ?</h2>
+      <h2>{{ 'HOME.WHY_TITLE' | translate }}</h2>
       <div class="why-grid">
         <div class="why-card">
           <div class="why-icon"><mat-icon>search</mat-icon></div>
-          <h3>Recherche facile</h3>
-          <p>Trouvez la salle idéale en quelques clics selon vos critères</p>
+          <h3>{{ 'HOME.WHY_1_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.WHY_1_DESC' | translate }}</p>
         </div>
         <div class="why-card">
           <div class="why-icon"><mat-icon>location_on</mat-icon></div>
-          <h3>Partout au Maroc</h3>
-          <p>Des salles disponibles dans toutes les grandes villes</p>
+          <h3>{{ 'HOME.WHY_2_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.WHY_2_DESC' | translate }}</p>
         </div>
         <div class="why-card">
           <div class="why-icon"><mat-icon>event_available</mat-icon></div>
-          <h3>Réservation simple</h3>
-          <p>Processus de réservation rapide et sécurisé en 3 étapes</p>
+          <h3>{{ 'HOME.WHY_3_TITLE' | translate }}</h3>
+          <p>{{ 'HOME.WHY_3_DESC' | translate }}</p>
         </div>
       </div>
     </div>
