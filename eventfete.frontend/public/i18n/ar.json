@@ -1,46 +1,48 @@
 {
   "NAVBAR": {
-    "BRAND": "فيت دو ليفينمو",
-    "ACCUEIL": "الرئيسية",
-    "CHERCHEUR": "البحث",
-    "RESERVATIONS": "الحجوزات",
-    "PROFIL": "الملف الشخصي",
-    "PROPRIETAIRE": "المالك",
-    "ADMINISTRATEUR": "المسؤول",
-    "CONNEXION": "تسجيل الدخول",
-    "SINSCRIRE": "إنشاء حساب",
-    "DECONNEXION": "تسجيل الخروج"
+    "BRAND": "EventFete",
+    "ACCUEIL": "Home",
+    "CHERCHEUR": "Search",
+    "RESERVATIONS": "Bookings",
+    "PROFIL": "Profile",
+    "PROPRIETAIRE": "Owner",
+    "ADMINISTRATEUR": "Admin",
+    "CONNEXION": "Log in",
+    "SINSCRIRE": "Sign up",
+    "DECONNEXION": "Log out"
   },
   "HOME": {
-    "TITLE": "ابحث عن القاعة المثالية",
-    "SUBTITLE": "آلاف القاعات لجميع مناسباتكم",
-    "VILLE_PLACEHOLDER": "المدينة",
-    "CAPACITE_PLACEHOLDER": "السعة",
-    "RECHERCHER_BTN": "ابحث عن قاعة",
-    "WHY_TITLE": "لماذا تختار EventFete؟",
-    "WHY_1_TITLE": "بحث سهل",
-    "WHY_1_DESC": "اعثر على القاعة المثالية ببضع نقرات حسب معاييرك",
-    "WHY_2_TITLE": "في جميع أنحاء المغرب",
-    "WHY_2_DESC": "قاعات متوفرة في جميع المدن الكبرى",
-    "WHY_3_TITLE": "حجز بسيط",
-    "WHY_3_DESC": "عملية حجز سريعة وآمنة في 3 خطوات"
+    "TITLE": "Find your perfect venue",
+    "SUBTITLE": "Thousands of venues for all your events",
+    "VILLE_PLACEHOLDER": "City",
+    "CAPACITE_PLACEHOLDER": "Capacity",
+    "RECHERCHER_BTN": "Search a venue",
+    "RESET_BTN": "Reset",
+    "WHY_TITLE": "Why choose EventFete?",
+    "WHY_1_TITLE": "Easy search",
+    "WHY_1_DESC": "Find the ideal venue in a few clicks based on your criteria",
+    "WHY_2_TITLE": "All over Morocco",
+    "WHY_2_DESC": "Venues available in every major city",
+    "WHY_3_TITLE": "Simple booking",
+    "WHY_3_DESC": "Fast and secure booking process in 3 steps"
   },
   "CHERCHEUR": {
-    "VILLE_PLACEHOLDER": "المدينة",
-    "CAPACITE_PLACEHOLDER": "السعة الدنيا",
-    "TRI_PERTINENCE": "الأكثر صلة",
-    "TRI_PRIX": "السعر تصاعدي",
-    "TRI_NOTE": "الأفضل تقييمًا",
-    "RECHERCHER_BTN": "بحث",
-    "TITLE": "نتائج البحث",
-    "RESULTS_COUNT": "قاعة (قاعات) موجودة",
-    "DISPONIBLES_LE": "متوفرة بتاريخ",
-    "EMPTY": "لا توجد قاعة مطابقة لبحثك.",
-    "CAPACITE_LABEL": "السعة:",
-    "PERSONNES": "شخص",
-    "VOIR_DETAILS": "← عرض التفاصيل",
-    "PAR_JOUR": "/اليوم",
-    "AVIS": "تقييم"
+    "VILLE_PLACEHOLDER": "City",
+    "CAPACITE_PLACEHOLDER": "Min. capacity",
+    "TRI_PERTINENCE": "Relevance",
+    "TRI_PRIX": "Price: low to high",
+    "TRI_NOTE": "Best rated",
+    "RECHERCHER_BTN": "Search",
+    "RESET_BTN": "Reset",
+    "TITLE": "Search results",
+    "RESULTS_COUNT": "venue(s) found",
+    "DISPONIBLES_LE": "available on",
+    "EMPTY": "No venue matches your search.",
+    "CAPACITE_LABEL": "Capacity:",
+    "PERSONNES": "people",
+    "VOIR_DETAILS": "View details →",
+    "PAR_JOUR": "/day",
+    "AVIS": "reviews"
   },
   "LANG_SWITCH": {
     "FR": "Français",
@@ -48,6 +50,6 @@
     "AR": "العربية"
   },
   "FOOTER": {
-    "TEXT": "© 2026 EventFete — بحقوق النشر لجمعة كوردة. جميع الحقوق محفوظة."
+    "TEXT": "© 2026 EventFete — Copyright by Jemaa Kourda. All rights reserved."
   }
 }

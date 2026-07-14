@@ -37,6 +37,9 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
         <button type="submit" class="search-btn">
           <mat-icon>search</mat-icon> {{ 'CHERCHEUR.RECHERCHER_BTN' | translate }}
         </button>
+        <button type="button" class="reset-btn" (click)="onReset()">
+          <mat-icon>refresh</mat-icon> {{ 'CHERCHEUR.RESET_BTN' | translate }}
+        </button>
       </form>
 
       <h1>{{ 'CHERCHEUR.TITLE' | translate }}</h1>
@@ -123,6 +126,21 @@ import { SalleService, SalleResponse } from '../../../core/services/salle.servic
       cursor: pointer;
       height: 42px;
     }
+    .reset-btn {
+      background: #fff;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      height: 42px;
+    }
+    .reset-btn:hover { background: #f8fafc; }
 
     .spinner-wrap { display: flex; justify-content: center; padding: 64px; }
     .empty-state { text-align: center; padding: 64px 24px; color: #94a3b8; }
@@ -200,6 +218,11 @@ export class ChercheurComponent {
   }
 
   onSearch() {
+    this.load();
+  }
+
+  onReset() {
+    this.form.reset({ ville: '', capacite: null, tri: '', date: '' });
     this.load();
   }
 
